@@ -893,7 +893,8 @@ namespace ShaderForge {
 
 
 			if( dependencies.grabPass ) {
-				App( "uniform sampler2D " + ps.catBlending.GetGrabTextureName() + ";" );
+				//App( "uniform sampler2D " + ps.catBlending.GetGrabTextureName() + ";" );
+				App( "UNITY_DECLARE_SCREENSPACE_TEXTURE(" + ps.catBlending.GetGrabTextureName() + ");" );
 			}
 				
 			if( dependencies.depthTexture )
@@ -2120,7 +2121,7 @@ namespace ShaderForge {
 			if( dependencies.grabPass ) {
 
 				string s = "float4 sceneColor = ";
-				s += "tex2D(" + ps.catBlending.GetGrabTextureName() + ", sceneUVs);";
+				s += "UNITY_SAMPLE_SCREENSPACE_TEXTURE (" + ps.catBlending.GetGrabTextureName() + ", sceneUVs);";
 				App( s );
 			}
 
@@ -2244,7 +2245,8 @@ namespace ShaderForge {
 					App( "float4 pos : SV_POSITION;" ); // Already included in shadow passes
 				}
 				if( dependencies.hasPropertiesWithInstancing )
-					App( "UNITY_VERTEX_INPUT_INSTANCE_ID" );
+					//App( "UNITY_VERTEX_INPUT_INSTANCE_ID" );
+					App( "UNITY_VERTEX_OUTPUT_STEREO" );
 
 
 				if( ps.catLighting.IsVertexLit() )
@@ -2326,7 +2328,9 @@ namespace ShaderForge {
 
 			if( dependencies.hasPropertiesWithInstancing ) {
 				App( "UNITY_SETUP_INSTANCE_ID( v );" );
-				App( "UNITY_TRANSFER_INSTANCE_ID( v, o );" );
+				//App( "UNITY_TRANSFER_INSTANCE_ID( v, o );" );
+				App( "UNITY_INITIALIZE_OUTPUT( VertexOutput, o );" );
+				App( "UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( o );" );
 			}
 
 			if( dependencies.uv0_frag )
@@ -2580,7 +2584,7 @@ namespace ShaderForge {
 			scope++;
 
 			if( dependencies.hasPropertiesWithInstancing ) {
-				App( "UNITY_SETUP_INSTANCE_ID( i );" );
+				App( "UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( i );" );
 			}
 
 			if( dependencies.frag_facing ) {
